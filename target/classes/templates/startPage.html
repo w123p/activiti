@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>开启流程页面</title>
+
+</head>
+<body>
+<h1>所有已经部署的流程页面</h1>
+
+<div>
+
+    <table id="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>模型名称</th>
+                <th>key</th>
+                <th>版本</th>
+                <th>类别</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+
+
+        <tbody>
+        <tr th:each="item:${list}">
+            <td th:text="${item.id}"></td>
+            <td th:text="${item.name}"></td>
+            <td th:text="${item.key}"></td>
+            <td th:text="${item.version}"></td>
+            <td th:text="${item.category}"></td>
+            <td>
+
+                <a th:href="${'/startProcess/'+item.id}">开启流程</a>
+                <a th:id="${item.id}" onclick="deleteProcess(this)" href="javascript:;">删除流程</a>
+
+
+            </td>
+        </tr>
+
+
+        </tbody>
+    </table>
+
+
+</div>
+<script th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript">
+
+    //部署模型
+    function deleteProcess(e) {
+        let id = $(e).attr("id");
+        $.post('/deleteProcess', {id: id}, function (res) {
+            alert(res.msg);
+            window.location.href="/startPage"
+        })
+    }
+
+
+</script>
+</body>
+
+
+</html>

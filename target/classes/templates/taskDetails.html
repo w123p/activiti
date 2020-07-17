@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>任务详情</title>
+</head>
+<body>
+
+<h1>任务详情</h1>
+<div>
+
+    <div th:each="item:${history}">
+        <h3 th:text="${item.actName}"></h3>
+        <div>
+            <ul>
+                <li th:each="it:${item.process}">
+                    <span th:text="${it.key}"></span>---><span th:text="${it.value}"></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <h3>需要提交的表单</h3>
+
+    <input name="processesId" id="processesId" th:value="${task.processInstanceId}" type="hidden">
+
+
+    <form>
+
+        <input name="taskId" type="hidden" th:value="${task.id}">
+        <div th:each="item : ${list}">
+
+            <div>
+                <span th:text="${item.name}"></span>
+            </div>
+
+            <div>
+                <input th:if="${item.type.getName() == 'string' }" type="text" th:name="${item.name}" >
+                <input th:if="${item.type.getName() == 'long' }" type="number" th:name="${item.name}" >
+
+
+                <div th:if="${item.type.getName() == 'boolean' }">
+                    <span>是</span><input th:if="${item.type.getName() == 'boolean' }" type="radio" th:name="${item.name}"  value="是">
+                    <span>否</span><input th:if="${item.type.getName() == 'boolean' }" type="radio" th:name="${item.name}"  value="否">
+                </div>
+            </div>
+
+        </div>
+
+    </form>
+    <div>
+        <button type="button" onclick="submit()">提交</button>
+        <button type="button">驳回(暂未开通)</button>
+    </div>
+</div>
+
+<div>
+
+    <img src="" id="show">
+
+
+</div>
+
+</body>
+<script src="/js/jquery.min.js"></script>
+<script>
+
+
+    generateProcessImg();
+
+    //生成流程图
+    function generateProcessImg() {
+
+        $.post("/generateProcessImg",{processInstanceId:$("#processesId").val()},function (res) {
+            $("#show").attr("src","data:image/png;base64,"+res.data);
+        })
+    }
+
+    //流程确认
+    function submit() {
+        $.post("/completeTasks",$("form").serialize(),function (res) {
+            alert(res.msg);
+        })
+
+    }
+
+
+</script>
+
+
+</html>

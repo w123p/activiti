@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>开启流程</title>
+</head>
+<body>
+
+<h1>开始这个流程</h1>
+
+
+<form>
+
+    <input name="processesId" th:value="${processesId}" type="hidden">
+
+    <div th:each="item : ${form}">
+
+        <div>
+            <span th:text="${item.name}"></span>
+        </div>
+
+        <div>
+            <input th:if="${item.type.getName() == 'string' }" type="text" th:name="${item.name}" >
+            <input th:if="${item.type.getName() == 'long' }" type="number" th:name="${item.name}" >
+        </div>
+
+    </div>
+
+    <p>提交人（整合安全框架后，这里就不需要了）</p>
+    <input type="text" name="userId" value="admin">
+</form>
+
+<div>
+    <button type="button" onclick="submit()">提交</button>
+    <button type="button">返回</button>
+</div>
+
+
+</body>
+
+<script src="/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+    //流程提交
+    function submit() {
+
+        $.post("/startProcesses",$("form").serialize(),function (res) {
+            alert(res.msg);
+        })
+
+    }
+
+</script>
+
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>任务审批</title>
+</head>
+<body>
+
+<div>
+
+    <h1>审核人界面-任务审批</h1>
+
+    <table id="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>KEY</th>
+            <th>流程定义</th>
+            <th>流程实例</th>
+            <th>任务名称</th>
+            <th>派遣给</th>
+            <th>创建时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item:${list}">
+            <td th:text="${item.id}"></td>
+            <td th:text="${item.taskDefinitionKey}"></td>
+            <td th:text="${item.processDefinitionId}"></td>
+            <td th:text="${item.processInstanceId}"></td>
+            <td th:text="${item.name}"></td>
+            <td th:text="${item.assignee}"></td>
+            <td th:text="${item.createTime}"></td>
+            <td>
+                <a th:href="${'/taskDetails/'+ item.id}">详情</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+
+</div>
+
+
+
+
+
+</body>
+</html>

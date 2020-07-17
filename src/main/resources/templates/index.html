@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+    <script th:src="@{/js/jquery.min.js}"></script>
+</head>
+<body>
+<h1>模板页面</h1>
+<div>
+    <a th:href="@{/createModel}">创建新模板</a>
+    <a th:href="@{/startPage}">开启流程页面</a>
+    <button onclick="toTaskApproval()">审批页面</button>
+
+    <select>
+        <option value="wp">张三的审批（人事部）</option>
+        <option value="lisi">张四的审批（总经理）</option>
+    </select>
+
+
+</div>
+<div>
+    <table id="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>模型名称</th>
+            <th>key</th>
+            <th>版本</th>
+            <th>部署ID</th>
+            <th>创建时间</th>
+            <th>最后更新时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item:${list}">
+            <td th:text="${item.id}"></td>
+            <td th:text="${item.name}"></td>
+            <td th:text="${item.key}"></td>
+            <td th:text="${item.version}"></td>
+            <td th:text="${item.deploymentId}"></td>
+            <td th:text="${item.createTime}"></td>
+            <td th:text="${item.lastUpdateTime}"></td>
+
+            <td>
+                <a th:id="${item.id}" onclick="deleteModel(this)" href="javascript:;">删除流程</a>
+
+                <a th:href="${'/modeler.html?modelId='+ item.id }">编辑</a>
+                <a th:id="${item.id}" onclick="deploymentModel(this)" href="javascript:;">部署</a>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+
+    //部署模型
+    function deploymentModel(e) {
+        let id = $(e).attr("id");
+        $.post('/deploymentModel', {id: id}, function (res) {
+            alert(res.msg);
+            window.location.href="/index"
+
+        })
+    }
+
+    //跳转到
+    function toTaskApproval() {
+
+        let id  = $("select").val();
+
+        window.location.href="/taskApproval/"+id;
+    }
+    function  deleteModel(e) {
+        let id = $(e).attr("id");
+        $.post('/delete', {modelId: id}, function (res) {
+            alert(res.msg);
+            window.location.href="/index"
+        })
+    }
+
+</script>
+
+</body>
+</html>
